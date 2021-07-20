@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8e5fec726ec25624fb85d8bce3b07868
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - sliderPrefab: {fileID: 6643953913994923591, guid: 083dad5f80f17bb40bebbab0e5269289,
+      type: 3}
+  - canvasUIPrefab: {fileID: 3290559647556646728, guid: a5f435af7009cae438c904e2c71a4e32,
+      type: 3}
+  - mouseOverThisColliderClass: {instanceID: 0}
+  - inRangeClass: {instanceID: 0}
+  - gameObjectData: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
