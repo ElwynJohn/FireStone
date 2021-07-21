@@ -18,7 +18,7 @@ namespace Firestone.Inventory
         protected static bool AnyClosedThisUpdate { get; set; } = false;
         protected static bool AnyOpenedThisUpdate { get; set; } = false;
         protected bool Toggled { get; set; } = false;
-        protected InventoryData InventoryData { get; set; } = null;
+        public InventoryData InventoryData { get; protected set; } = null;
         protected HoverableColliders ItemFrameColliders { get; set; } = null;
         protected int IndexOfLastInventorySlotHovered { get; set; } = 0;
         protected static MouseInventorySlot MouseInventory { get; set; } = default;
@@ -32,6 +32,7 @@ namespace Firestone.Inventory
                 new InventorySlotData(new ItemID(2), 5)
             };
             InventoryData = new InventoryData(testData, capacity);
+			InventoryData.InventoryUpdate += HandleInventoryUpdate;
             for (int i = 0; i < InventoryData.inventoryData.Length && i < itemIconGrid.gridElements.Length; i++)
             {
                 if (InventoryData.inventoryData[i].amount > 0)
@@ -91,6 +92,8 @@ namespace Firestone.Inventory
 
 
 
+		public void HandleInventoryUpdate(object sender, InventoryUpdateEventArgs args)
+			=> UpdateInventorySlot(args.InventorySlotIndex);
         protected void UpdateInventorySlot(int inventorySlotIndex)
         {
             InventorySlotData updatedInventorySlotData = InventoryData.InteractWithInventoryWithMouse(inventorySlotIndex);

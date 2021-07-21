@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5912630c105cc8a40892265b96f012e3, type: 3}
   m_Name: 2
   m_EditorClassIdentifier: 
-  gameID: 2
+  gameID:
+    itemID: 2
   displayedName: Stone
   icon: {fileID: 21300000, guid: aaea0a4d555a6864a8ad69cbb1ee228a, type: 3}
   CanBePlaced: 0

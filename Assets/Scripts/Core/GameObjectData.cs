@@ -5,7 +5,7 @@ namespace Firestone.Core
     [CreateAssetMenu(fileName = "New GameObjectData", menuName = "GameObjectData")]
     public class GameObjectData : ScriptableObject
     {
-        public int gameID;
+        public ItemID gameID;
 
         public string displayedName;
         public Sprite icon;
@@ -31,5 +31,8 @@ namespace Firestone.Core
         public float DistanceToDropDeviation;
         public float DropSpeed = 5f;
         public float DropDecelleration = 20f;
+
+
+		public static bool IsAnItem(ItemID id) => id.itemID >= 0;
     }
 }

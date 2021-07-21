@@ -1,25 +1,69 @@
 ﻿using UnityEngine;
 using Firestone.Core;
+using System;
 
 namespace Firestone.Inventory
 {
+	public class InventoryUpdateEventArgs : EventArgs
+	{
+		public InventoryUpdateEventArgs(int inventorySlotIndex, InventorySlotData inventorySlotData)
+		{
+			this.InventorySlotIndex = inventorySlotIndex;
+			this.InventorySlotData = inventorySlotData;
+		}
+		public int InventorySlotIndex;
+		public InventorySlotData InventorySlotData;
+	}
+
     public class InventoryData
     {
-        public InventoryData()
-        {
-
-        }
         public InventoryData(InventorySlotData[] inventoryData, int inventorySize)
         {
             this.inventoryData = new InventorySlotData[inventorySize];
+			inventorySlotsLeft = inventorySize;
             for (int i = 0; i < inventoryData.Length && i < this.inventoryData.Length; i++)
             {
+				this.inventoryData[i].itemID.itemID = -1;
                 this.inventoryData[i] = inventoryData[i];
+				if (GameObjectData.IsAnItem(inventoryData[i].itemID))
+					inventorySlotsLeft--;
             }
         }
 
-        public InventorySlotData[] inventoryData { get; private set; }
+		private void OnInventoryUpdate(InventoryUpdateEventArgs args)
+			=> InventoryUpdate?.Invoke(this, args);
+		public event EventHandler<InventoryUpdateEventArgs> InventoryUpdate;
 
+        public InventorySlotData[] inventoryData { get; private set; }
+		private int inventorySlotsLeft;
+		public bool IsFull { get => inventorySlotsLeft == 0; }
+
+		public bool AddItemToInventory(InventorySlotData item)
+		{
+			int firstEmptySlot = -1;
+			for (int i = 0; i < inventoryData.Length; i++)
+			{
+				if (inventoryData[i].itemID.itemID == item.itemID.itemID)
+				{
+					inventoryData[i].amount += item.amount;
+					OnInventoryUpdate(new InventoryUpdateEventArgs
+						(i, inventoryData[i]));
+					return true;
+				}
+				if (!GameObjectData.IsAnItem(inventoryData[i].itemID))
+					firstEmptySlot = i;
+			}
+			if (firstEmptySlot < 0)
+				return false;
+			inventoryData[firstEmptySlot].amount += item.amount;
+			inventoryData[firstEmptySlot].itemID.itemID += item.itemID.itemID;
+			inventorySlotsLeft--;
+			OnInventoryUpdate(new InventoryUpdateEventArgs
+				(firstEmptySlot, inventoryData[firstEmptySlot]));
+			return true;
+		}
+
+		// @@Rework Make all inventory changes pass through AddItemToInventory
         public InventorySlotData InteractWithInventoryWithMouse(int inventorySlotIndex)
         {
             if (inventorySlotIndex >= inventoryData.Length)
