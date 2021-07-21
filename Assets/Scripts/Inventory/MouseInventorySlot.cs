@@ -86,24 +86,18 @@ namespace Firestone.Inventory
                 return;
 
             Display(false);
-			if (lastInventoryTouched.IsFull)
+			bool success = lastInventoryTouched.AddItemToInventory
+				(itemData, indexOfLastInventorySlotTouched);
+			// if we cant add item to specific slot, try adding it to any slot
+			if (!success)
+				success = lastInventoryTouched.AddItemToInventory(itemData);
+			if (!success)
 			{
-				bool success = lastInventoryTouched.AddItemToInventory(itemData);
-				if (!success)
-				{
-					drop.StartPos = playerTransform.position + dropStartPosOffset;
-	                GameObjectData goData = Resources.Load<GameObjectData>
-						(itemData.ItemID.ToString());
-					HandleGather.SpawnAndDropObject(goData, drop, itemData.Amount);
-				}
-            	SetItemData(new InventorySlotData(), lastInventoryTouched, 
-					indexOfLastInventorySlotTouched);
-				return;
+				drop.StartPos = playerTransform.position + dropStartPosOffset;
+	            GameObjectData goData = Resources.Load<GameObjectData>
+					(itemData.ItemID.ToString());
+				HandleGather.SpawnAndDropObject(goData, drop, itemData.Amount);
 			}
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched]
-				.Amount += itemData.Amount;
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched]
-				.ItemID = itemData.ItemID;
             SetItemData(new InventorySlotData(), lastInventoryTouched, 
 				indexOfLastInventorySlotTouched);
         }

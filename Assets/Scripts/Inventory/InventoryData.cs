@@ -52,7 +52,8 @@ namespace Firestone.Inventory
 					if (!GameObjectData.IsAnItem(inventoryData[i].ItemID))
 						inventoryIndex = i;
 				}
-			if (inventoryIndex < 0)
+			if (inventoryIndex < 0 || !(item.ItemID == inventoryData[inventoryIndex].ItemID 
+					|| inventoryData[inventoryIndex].ItemID == ItemID.NotAnItem))
 				return false;
 
 			item.Amount += inventoryData[inventoryIndex].Amount;
