@@ -9,6 +9,8 @@ namespace Firestone.Gather
         [SerializeField] GameObjectData gameObjectData = default;
 
         int amount = 1;
+		// handled deals with the fact that player has two colliders.
+		bool handled = false;
 
 		private static InventoryData inventory = null;
         //functions
@@ -19,12 +21,15 @@ namespace Firestone.Gather
 				if (inventory == null)
 					inventory = GameObject.FindWithTag("Player Inventory")
 						.GetComponent<PlayerInventory>()?.InventoryData;
-				if (inventory == null || inventory.IsFull)
+				if (inventory == null || handled)
 					return;
                 bool success = inventory.AddItemToInventory
 					(new InventorySlotData(gameObjectData.gameID, amount));
 				if (success)
+				{
+					handled = true;
                 	Destroy(gameObject);
+				}
             }
         }
 

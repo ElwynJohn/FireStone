@@ -28,6 +28,19 @@ namespace Firestone.Inventory
             InventorySlotData[] testData = new InventorySlotData[]
             {
                 new InventorySlotData(ItemID.Wood, 100),
+                new InventorySlotData(ItemID.Wood, 10),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
                 new InventorySlotData(ItemID.Chest, 4),
                 new InventorySlotData(ItemID.Stone, 5)
             };

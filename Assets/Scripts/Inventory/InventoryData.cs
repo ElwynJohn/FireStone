@@ -63,6 +63,8 @@ namespace Firestone.Inventory
 		{
 			if (inventoryData[slotIndex].ItemID == ItemID.NotAnItem)
 				inventorySlotsLeft--;
+			else if (item.ItemID == ItemID.NotAnItem)
+				inventorySlotsLeft++;
 			inventoryData[slotIndex].Amount = item.Amount;
 			inventoryData[slotIndex].ItemID = item.ItemID;
 			OnInventoryUpdate(new InventoryUpdateEventArgs

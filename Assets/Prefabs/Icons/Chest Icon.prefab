@@ -73,15 +73,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: defb84c9283646244bf2092b58b891e8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.8333333, y: 0.5833333}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &1843394873051964015
@@ -102,7 +102,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.8333333, y: 0.8333333}
-    newSize: {x: 0.8333333, y: 0.8333333}
+    newSize: {x: 0.8333333, y: 0.5833333}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -124,7 +124,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floatHeight: 0.16
   floatFrequency: 1
-  startingPoint: 1.573
   dropAcceleration: 10
   moveSpeed: 1
   moveSpeedDecay: 1.5
@@ -141,4 +140,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectData: {fileID: 11400000, guid: d5adc361ab56c834aad7bf742a21e7be, type: 2}
-  invData: {fileID: 11400000, guid: e5cba72467defaa41ae93a095b030688, type: 2}

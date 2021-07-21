@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using Firestone.Core;
+using Firestone.Gather;
 
 namespace Firestone.Inventory
 {
@@ -9,11 +10,16 @@ namespace Firestone.Inventory
     public class MouseInventorySlot : MonoBehaviour
     {
         [SerializeField] private Vector2 sizePixels = default;
+		private static Transform playerTransform = default;
+        private static Drop drop = default;
+        private static Vector3 dropStartPosOffset = default;
+
         private static Image itemIcon = default;
         private static Image itemFrame = default;
         private static TextMeshProUGUI textMeshComponent = default;
         public static InventorySlotData itemData { get; private set; } = default;
         private static RectTransform rect = default;
+
         private static InventoryData lastInventoryTouched = default;
         private static int indexOfLastInventorySlotTouched = 0;
         private static bool isOpen = false;
@@ -30,6 +36,14 @@ namespace Firestone.Inventory
             itemIcon.GetComponent<RectTransform>().sizeDelta = sizePixels;
             itemFrame.GetComponent<RectTransform>().sizeDelta = sizePixels;
             textMeshComponent.GetComponent<RectTransform>().sizeDelta = sizePixels;
+
+			playerTransform = GameObject.FindWithTag("Player").transform;
+			drop = new Drop {
+				DistanceToDrop = 0.5f,
+        		DistanceToDropDeviation = 0.1f,
+				Decelleration = 4f,
+				Speed = 1f,
+			};
 
             Display(false);
         }
@@ -72,9 +86,26 @@ namespace Firestone.Inventory
                 return;
 
             Display(false);
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].Amount += itemData.Amount;
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].ItemID = itemData.ItemID;
-            SetItemData(new InventorySlotData(), lastInventoryTouched, indexOfLastInventorySlotTouched);
+			if (lastInventoryTouched.IsFull)
+			{
+				bool success = lastInventoryTouched.AddItemToInventory(itemData);
+				if (!success)
+				{
+					drop.StartPos = playerTransform.position + dropStartPosOffset;
+	                GameObjectData goData = Resources.Load<GameObjectData>
+						(itemData.ItemID.ToString());
+					HandleGather.SpawnAndDropObject(goData, drop, itemData.Amount);
+				}
+            	SetItemData(new InventorySlotData(), lastInventoryTouched, 
+					indexOfLastInventorySlotTouched);
+				return;
+			}
+            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched]
+				.Amount += itemData.Amount;
+            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched]
+				.ItemID = itemData.ItemID;
+            SetItemData(new InventorySlotData(), lastInventoryTouched, 
+				indexOfLastInventorySlotTouched);
         }
     }
 }
