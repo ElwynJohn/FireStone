@@ -32,7 +32,7 @@ namespace Firestone.Inventory
                 new InventorySlotData(ItemID.Stone, 5)
             };
             InventoryData = new InventoryData(testData, capacity);
-			InventoryData.InventoryUpdate += HandleInventoryUpdate;
+			InventoryData.InventoryUpdate += UpdateInventorySlot;
             for (int i = 0; i < InventoryData.inventoryData.Length && i < itemIconGrid.gridElements.Length; i++)
             {
                 if (InventoryData.inventoryData[i].Amount > 0)
@@ -70,7 +70,7 @@ namespace Firestone.Inventory
                 bool isInventorySlotClicked = isInventorySlotHovered && (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1));
                 if (isInventorySlotClicked)
                 {
-                    UpdateInventorySlot(indexOfInventorySlotHovered);
+            		InventoryData.InteractWithInventoryWithMouse(indexOfInventorySlotHovered);
                 }
 
                 //give player visual feedback by changing inventory slot colours when hovered
@@ -90,25 +90,27 @@ namespace Firestone.Inventory
             }
         }
 
-
-
-		public void HandleInventoryUpdate(object sender, InventoryUpdateEventArgs args)
-			=> UpdateInventorySlot(args.InventorySlotIndex);
-        protected void UpdateInventorySlot(int inventorySlotIndex)
+        public void UpdateInventorySlot(object sender, InventoryUpdateEventArgs args)
         {
-            InventorySlotData updatedInventorySlotData = InventoryData.InteractWithInventoryWithMouse(inventorySlotIndex);
-            if (updatedInventorySlotData.Amount == 0)
+            if (args.InventorySlotData.Amount == 0)
             {
-                itemAmountGrid.DisplayRangeOfGridElements(false, inventorySlotIndex, inventorySlotIndex + 1);
-                itemIconGrid.DisplayRangeOfGridElements(false, inventorySlotIndex, inventorySlotIndex + 1);
+                itemAmountGrid.DisplayRangeOfGridElements
+					(false, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+                itemIconGrid.DisplayRangeOfGridElements
+					(false, args.InventorySlotIndex, args.InventorySlotIndex + 1);
             }
             else
             {
-                GameObjectData gameObjectData = Resources.Load<GameObjectData>(updatedInventorySlotData.ItemID.ToString());
-                itemIconGrid.DisplayRangeOfGridElements(true, inventorySlotIndex, inventorySlotIndex + 1);
-                itemIconGrid.ChangeGridElementSprite(inventorySlotIndex, gameObjectData.icon);
-                itemAmountGrid.DisplayRangeOfGridElements(true, inventorySlotIndex, inventorySlotIndex + 1);
-                itemAmountGrid.ChangeTextToDisplay(inventorySlotIndex, updatedInventorySlotData.Amount.ToString());
+                GameObjectData gameObjectData = Resources.Load
+					<GameObjectData>(args.InventorySlotData.ItemID.ToString());
+                itemIconGrid.DisplayRangeOfGridElements
+					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+                itemIconGrid.ChangeGridElementSprite
+					(args.InventorySlotIndex, gameObjectData.icon);
+                itemAmountGrid.DisplayRangeOfGridElements
+					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+                itemAmountGrid.ChangeTextToDisplay
+					(args.InventorySlotIndex, args.InventorySlotData.Amount.ToString());
             }
         }
 
