@@ -38,6 +38,7 @@ namespace Firestone.Inventory
 		private int inventorySlotsLeft;
 		public bool IsFull { get => inventorySlotsLeft == 0; }
 
+		//returns true if the item was successfully added
 		public bool AddItemToInventory(InventorySlotData item, int inventoryIndex = -1)
 		{
 			if (inventoryIndex == -1)

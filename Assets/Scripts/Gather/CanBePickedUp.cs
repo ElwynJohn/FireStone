@@ -21,9 +21,10 @@ namespace Firestone.Gather
 						.GetComponent<PlayerInventory>()?.InventoryData;
 				if (inventory == null || inventory.IsFull)
 					return;
-				// @@FIXME: What if inventory is full
-                inventory.AddItemToInventory(new InventorySlotData(gameObjectData.gameID, amount));
-                Destroy(gameObject);
+                bool success = inventory.AddItemToInventory
+					(new InventorySlotData(gameObjectData.gameID, amount));
+				if (success)
+                	Destroy(gameObject);
             }
         }
 
