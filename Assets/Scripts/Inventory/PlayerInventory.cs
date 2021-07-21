@@ -43,6 +43,18 @@ namespace Firestone.Inventory
             }
         }
 
+		public override void UpdateInventorySlot(object sender, InventoryUpdateEventArgs args)
+		{
+			base.UpdateInventorySlot(sender, args);
+			if (!IsOpen && args.InventorySlotIndex < HotbarLength)
+			{
+	            itemIconGrid.DisplayRangeOfGridElements
+					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+	            itemAmountGrid.DisplayRangeOfGridElements
+					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+			}
+		}
+
         protected override void Close()
         {
             base.Close();

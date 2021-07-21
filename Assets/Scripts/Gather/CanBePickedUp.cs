@@ -12,7 +12,7 @@ namespace Firestone.Gather
 
 		private static InventoryData inventory = null;
         //functions
-        private void OnTriggerEnter2D(Collider2D otherCollider)
+        private void OnTriggerStay2D(Collider2D otherCollider)
         {
             if (otherCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {

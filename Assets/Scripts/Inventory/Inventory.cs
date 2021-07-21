@@ -90,7 +90,7 @@ namespace Firestone.Inventory
             }
         }
 
-        public void UpdateInventorySlot(object sender, InventoryUpdateEventArgs args)
+        public virtual void UpdateInventorySlot(object sender, InventoryUpdateEventArgs args)
         {
             if (args.InventorySlotData.Amount == 0)
             {
@@ -103,14 +103,17 @@ namespace Firestone.Inventory
             {
                 GameObjectData gameObjectData = Resources.Load
 					<GameObjectData>(args.InventorySlotData.ItemID.ToString());
-                itemIconGrid.DisplayRangeOfGridElements
-					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
                 itemIconGrid.ChangeGridElementSprite
 					(args.InventorySlotIndex, gameObjectData.icon);
-                itemAmountGrid.DisplayRangeOfGridElements
-					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
                 itemAmountGrid.ChangeTextToDisplay
 					(args.InventorySlotIndex, args.InventorySlotData.Amount.ToString());
+				if (IsOpen)
+				{
+	                itemIconGrid.DisplayRangeOfGridElements
+						(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+	                itemAmountGrid.DisplayRangeOfGridElements
+						(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+				}
             }
         }
 
