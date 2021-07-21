@@ -43,16 +43,16 @@ namespace Firestone.Inventory
             lastInventoryTouched = previousInventory;
             indexOfLastInventorySlotTouched = previousInventorySlot;
             MouseInventorySlot.itemData = itemData;
-            if (itemData.amount <= 0)
+            if (itemData.Amount <= 0)
             {
                 Display(false);
             }
             else
             {
                 Display(true);
-                GameObjectData goData = Resources.Load<GameObjectData>(itemData.itemID.itemID.ToString());
+                GameObjectData goData = Resources.Load<GameObjectData>(itemData.ItemID.ToString());
                 itemIcon.sprite = goData.icon;
-                textMeshComponent.text = itemData.amount.ToString();
+                textMeshComponent.text = itemData.Amount.ToString();
             }
         }
         public static void Display(bool display)
@@ -72,8 +72,8 @@ namespace Firestone.Inventory
                 return;
 
             Display(false);
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].amount += itemData.amount;
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].itemID = itemData.itemID;
+            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].Amount += itemData.Amount;
+            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].ItemID = itemData.ItemID;
             SetItemData(new InventorySlotData(), lastInventoryTouched, indexOfLastInventorySlotTouched);
         }
     }

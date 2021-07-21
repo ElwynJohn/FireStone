@@ -33,6 +33,7 @@ namespace Firestone.Core
         public float DropDecelleration = 20f;
 
 
-		public static bool IsAnItem(ItemID id) => id.itemID >= 0;
+		public override string ToString() => gameID.ToString();
+		public static bool IsAnItem(ItemID id) => id != ItemID.NotAnItem;
     }
 }

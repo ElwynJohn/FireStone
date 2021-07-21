@@ -23,9 +23,9 @@ namespace Firestone.Inventory
 			inventorySlotsLeft = inventorySize;
             for (int i = 0; i < inventoryData.Length && i < this.inventoryData.Length; i++)
             {
-				this.inventoryData[i].itemID.itemID = -1;
+				this.inventoryData[i].ItemID = ItemID.NotAnItem;
                 this.inventoryData[i] = inventoryData[i];
-				if (GameObjectData.IsAnItem(inventoryData[i].itemID))
+				if (GameObjectData.IsAnItem(inventoryData[i].ItemID))
 					inventorySlotsLeft--;
             }
         }
@@ -43,20 +43,20 @@ namespace Firestone.Inventory
 			int firstEmptySlot = -1;
 			for (int i = 0; i < inventoryData.Length; i++)
 			{
-				if (inventoryData[i].itemID.itemID == item.itemID.itemID)
+				if (inventoryData[i].ItemID == item.ItemID)
 				{
-					inventoryData[i].amount += item.amount;
+					inventoryData[i].Amount += item.Amount;
 					OnInventoryUpdate(new InventoryUpdateEventArgs
 						(i, inventoryData[i]));
 					return true;
 				}
-				if (!GameObjectData.IsAnItem(inventoryData[i].itemID))
+				if (!GameObjectData.IsAnItem(inventoryData[i].ItemID))
 					firstEmptySlot = i;
 			}
 			if (firstEmptySlot < 0)
 				return false;
-			inventoryData[firstEmptySlot].amount += item.amount;
-			inventoryData[firstEmptySlot].itemID.itemID += item.itemID.itemID;
+			inventoryData[firstEmptySlot].Amount += item.Amount;
+			inventoryData[firstEmptySlot].ItemID = item.ItemID;
 			inventorySlotsLeft--;
 			OnInventoryUpdate(new InventoryUpdateEventArgs
 				(firstEmptySlot, inventoryData[firstEmptySlot]));
@@ -73,22 +73,22 @@ namespace Firestone.Inventory
             }
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if (inventoryData[inventorySlotIndex].amount == 0)
+                if (inventoryData[inventorySlotIndex].Amount == 0)
                 {
                     inventoryData[inventorySlotIndex] = MouseInventorySlot.itemData;
                     MouseInventorySlot.SetItemData(new InventorySlotData(), this, inventorySlotIndex);
                 }
-                else if (MouseInventorySlot.itemData.amount == 0)
+                else if (MouseInventorySlot.itemData.Amount == 0)
                 {
                     MouseInventorySlot.SetItemData(inventoryData[inventorySlotIndex], this, inventorySlotIndex);
                     inventoryData[inventorySlotIndex] = new InventorySlotData();
                 }
-                else if(inventoryData[inventorySlotIndex].itemID.itemID == MouseInventorySlot.itemData.itemID.itemID)
+                else if(inventoryData[inventorySlotIndex].ItemID == MouseInventorySlot.itemData.ItemID)
                 {
-                    inventoryData[inventorySlotIndex].amount += MouseInventorySlot.itemData.amount;
+                    inventoryData[inventorySlotIndex].Amount += MouseInventorySlot.itemData.Amount;
                     MouseInventorySlot.SetItemData(new InventorySlotData(), this, inventorySlotIndex);
                 }
-                else if(inventoryData[inventorySlotIndex].itemID.itemID != MouseInventorySlot.itemData.itemID.itemID)
+                else if(inventoryData[inventorySlotIndex].ItemID != MouseInventorySlot.itemData.ItemID)
                 {
                     InventorySlotData temp = inventoryData[inventorySlotIndex];
                     inventoryData[inventorySlotIndex] = MouseInventorySlot.itemData;
@@ -97,23 +97,23 @@ namespace Firestone.Inventory
             }
             else if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (MouseInventorySlot.itemData.amount > 0 && 
-                    (MouseInventorySlot.itemData.itemID.itemID == inventoryData[inventorySlotIndex].itemID.itemID ||
-                    inventoryData[inventorySlotIndex].amount == 0))
+                if (MouseInventorySlot.itemData.Amount > 0 && 
+                    (MouseInventorySlot.itemData.ItemID == inventoryData[inventorySlotIndex].ItemID ||
+                    inventoryData[inventorySlotIndex].Amount == 0))
                 {
-                    inventoryData[inventorySlotIndex].itemID = MouseInventorySlot.itemData.itemID;
-                    inventoryData[inventorySlotIndex].amount++;
-                    MouseInventorySlot.SetItemData(new InventorySlotData(MouseInventorySlot.itemData.itemID, 
-                        MouseInventorySlot.itemData.amount - 1), this, inventorySlotIndex);
+                    inventoryData[inventorySlotIndex].ItemID = MouseInventorySlot.itemData.ItemID;
+                    inventoryData[inventorySlotIndex].Amount++;
+                    MouseInventorySlot.SetItemData(new InventorySlotData(MouseInventorySlot.itemData.ItemID, 
+                        MouseInventorySlot.itemData.Amount - 1), this, inventorySlotIndex);
                 }
-                else if (MouseInventorySlot.itemData.amount == 0)
+                else if (MouseInventorySlot.itemData.Amount == 0)
                 {
                     InventorySlotData mouseInventorySlotData = inventoryData[inventorySlotIndex];
-                    if (inventoryData[inventorySlotIndex].amount % 2 == 1)
-                        mouseInventorySlotData.amount = mouseInventorySlotData.amount / 2 + 1;
+                    if (inventoryData[inventorySlotIndex].Amount % 2 == 1)
+                        mouseInventorySlotData.Amount = mouseInventorySlotData.Amount / 2 + 1;
                     else
-                        mouseInventorySlotData.amount /= 2;
-                    inventoryData[inventorySlotIndex].amount /= 2;
+                        mouseInventorySlotData.Amount /= 2;
+                    inventoryData[inventorySlotIndex].Amount /= 2;
                     MouseInventorySlot.SetItemData(mouseInventorySlotData, this, inventorySlotIndex);
                 }
             }
