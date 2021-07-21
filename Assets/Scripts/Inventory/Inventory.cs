@@ -159,9 +159,6 @@ namespace Firestone.Inventory
             IsOpen = false;
             IsAnyOpen = false;
             MouseInventorySlot.Close();
-			// @@FIXME: probably dont need this if FIXME01 is fixed
-            for (int i = 0; i < InventoryData.inventoryData.Length; i++)
-                itemAmountGrid.ChangeTextToDisplay(i, InventoryData.inventoryData[i].Amount.ToString());
         }
         private void Toggle()
         {
