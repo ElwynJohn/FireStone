@@ -40,7 +40,7 @@ namespace Firestone.Inventory
 		public InventorySlotData GetSlotAtIndex(int index) => inventoryData[index];
 		public int Length { get => inventoryData.Length; }
 
-		//returns true if the item was successfully added
+		// returns true if the item was successfully added
 		public bool AddItemToInventory(InventorySlotData item, int inventoryIndex = -1)
 		{
 			if (inventoryIndex == -1)
@@ -54,7 +54,12 @@ namespace Firestone.Inventory
 					if (!GameObjectData.IsAnItem(inventoryData[i].ItemID))
 						inventoryIndex = i;
 				}
-			if (inventoryIndex < 0 || !(item.ItemID == inventoryData[inventoryIndex].ItemID 
+			// if the search did not find a valid slot for the item, return false.
+			if (inventoryIndex < 0)
+				return false;
+			// if inventoryIndex was given by user, it may be a bad index. We guard
+			// against that here
+			if (!(item.ItemID == inventoryData[inventoryIndex].ItemID 
 					|| inventoryData[inventoryIndex].ItemID == ItemID.NotAnItem))
 				return false;
 
@@ -62,69 +67,83 @@ namespace Firestone.Inventory
 			SetSlot(inventoryIndex, item);
 			return true;
 		}
-		public void SetSlot(int slotIndex, InventorySlotData item)
+		private void SetSlot(int slotIndex, InventorySlotData item)
 		{
 			if (inventoryData[slotIndex].ItemID == ItemID.NotAnItem)
 				inventorySlotsLeft--;
 			else if (item.ItemID == ItemID.NotAnItem)
 				inventorySlotsLeft++;
+
 			inventoryData[slotIndex].Amount = item.Amount;
-			inventoryData[slotIndex].ItemID = item.ItemID;
+			if (item.Amount == 0)
+				inventoryData[slotIndex].ItemID = ItemID.NotAnItem;
+			else
+				inventoryData[slotIndex].ItemID = item.ItemID;
+
 			OnInventoryUpdate(new InventoryUpdateEventArgs
 				(slotIndex, inventoryData[slotIndex]));
 		}
 
         public void InteractWithInventoryWithMouse(int inventorySlotIndex)
         {
+			var invSlot = inventoryData[inventorySlotIndex];
+			var mouseInvSlot = MouseInventorySlot.itemData;
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if (inventoryData[inventorySlotIndex].Amount == 0)
+                if (invSlot.Amount == 0)
                 {
-					SetSlot(inventorySlotIndex, MouseInventorySlot.itemData);
+					AddItemToInventory(mouseInvSlot, inventorySlotIndex);
                     MouseInventorySlot.SetItemData
 						(new InventorySlotData(), this, inventorySlotIndex);
                 }
-                else if (MouseInventorySlot.itemData.Amount == 0)
+                else if (mouseInvSlot.Amount == 0)
                 {
                     MouseInventorySlot.SetItemData
-						(inventoryData[inventorySlotIndex], this, inventorySlotIndex);
-					SetSlot(inventorySlotIndex, new InventorySlotData());
+						(invSlot, this, inventorySlotIndex);
+					var itemData = new InventorySlotData
+						(invSlot.ItemID, -1 * invSlot.Amount);
+					AddItemToInventory(itemData, inventorySlotIndex);
                 }
-                else if(inventoryData[inventorySlotIndex].ItemID == MouseInventorySlot.itemData.ItemID)
+                else if(invSlot.ItemID == mouseInvSlot.ItemID)
                 {
-					AddItemToInventory(MouseInventorySlot.itemData, inventorySlotIndex);
+					AddItemToInventory(mouseInvSlot, inventorySlotIndex);
                     MouseInventorySlot.SetItemData
 						(new InventorySlotData(), this, inventorySlotIndex);
                 }
-                else if(inventoryData[inventorySlotIndex].ItemID != MouseInventorySlot.itemData.ItemID)
+                else if(invSlot.ItemID != mouseInvSlot.ItemID)
                 {
-                    InventorySlotData temp = inventoryData[inventorySlotIndex];
-					SetSlot(inventorySlotIndex, MouseInventorySlot.itemData);
+                    InventorySlotData temp = invSlot;
+					var itemData = new InventorySlotData
+						(invSlot.ItemID, -1 * invSlot.Amount);
+					AddItemToInventory(itemData, inventorySlotIndex);
+					AddItemToInventory(mouseInvSlot, inventorySlotIndex);
                     MouseInventorySlot.SetItemData(temp, this, inventorySlotIndex);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (MouseInventorySlot.itemData.Amount > 0 && 
-                    (MouseInventorySlot.itemData.ItemID == inventoryData[inventorySlotIndex].ItemID 
-					|| inventoryData[inventorySlotIndex].Amount == 0))
+                if (mouseInvSlot.Amount > 0 && 
+                    (mouseInvSlot.ItemID == invSlot.ItemID 
+					|| invSlot.Amount == 0))
                 {
 					AddItemToInventory(new InventorySlotData
-						(MouseInventorySlot.itemData.ItemID, 1), inventorySlotIndex);
+						(mouseInvSlot.ItemID, 1), inventorySlotIndex);
                     MouseInventorySlot.SetItemData
-						(new InventorySlotData(MouseInventorySlot.itemData.ItemID, 
-                        MouseInventorySlot.itemData.Amount - 1), this, inventorySlotIndex);
+						(new InventorySlotData(mouseInvSlot.ItemID, 
+                        mouseInvSlot.Amount - 1), this, inventorySlotIndex);
                 }
-                else if (MouseInventorySlot.itemData.Amount == 0)
+                else if (mouseInvSlot.Amount == 0)
                 {
-                    InventorySlotData mouseInventorySlotData = inventoryData[inventorySlotIndex];
-                    if (inventoryData[inventorySlotIndex].Amount % 2 == 1)
+                    InventorySlotData mouseInventorySlotData = invSlot;
+                    if (invSlot.Amount % 2 == 1)
                         mouseInventorySlotData.Amount = mouseInventorySlotData.Amount / 2 + 1;
                     else
                         mouseInventorySlotData.Amount /= 2;
+					var itemData = new InventorySlotData
+						(invSlot.ItemID, invSlot.Amount / 2 * -1);
 					SetSlot(inventorySlotIndex, new InventorySlotData
-						(inventoryData[inventorySlotIndex].ItemID, 
-						inventoryData[inventorySlotIndex].Amount / 2));
+						(invSlot.ItemID, 
+						invSlot.Amount / 2));
                     MouseInventorySlot.SetItemData(mouseInventorySlotData, this, inventorySlotIndex);
                 }
             }
