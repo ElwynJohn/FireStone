@@ -64,7 +64,15 @@ MonoBehaviour:
   sliderOffsetY: 50
   canvasUIPrefab: {fileID: 3290559647556646728, guid: a5f435af7009cae438c904e2c71a4e32,
     type: 3}
-  dropPositionVariance: 0.15
+  drop:
+    SpawnInIdleState: 0
+    StartPos: {x: 0, y: 0, z: 0}
+    StartPosDeviation: 0.15
+    DistanceToDrop: 0.1
+    DistanceToDropDeviation: 0
+    Decelleration: 8
+    Speed: 2
+  dropStartPosOffset: {x: 0, y: 0.1, z: 0}
   mouseOverThisColliderClass: {fileID: 2490024431193242173}
   inRangeClass: {fileID: 2566688706200478156}
   gameObjectData: {fileID: 11400000, guid: df561b78d4b0e9c44b0411f965a91e68, type: 2}

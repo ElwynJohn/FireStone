@@ -17566,12 +17566,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2026061345}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &664641024 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-    type: 3}
-  m_PrefabInstance: {fileID: 870563656}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &719289835
 GameObject:
   m_ObjectHideFlags: 0
@@ -17755,75 +17749,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1189156991}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &870563656
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1573508743}
-    m_Modifications:
-    - target: {fileID: 4038646027947716270, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_Name
-      value: Chest
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 12.92
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 21
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6752664412618419205, guid: 52a921743b5bf5042a55bccd24421740,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 52a921743b5bf5042a55bccd24421740, type: 3}
 --- !u!1 &945592499
 GameObject:
   m_ObjectHideFlags: 0
@@ -48075,7 +48000,6 @@ Transform:
   - {fileID: 1371331099}
   - {fileID: 870285602}
   - {fileID: 1429446782}
-  - {fileID: 664641024}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48328,7 +48252,7 @@ GameObject:
   - component: {fileID: 1885223422}
   m_Layer: 0
   m_Name: Player Inventory
-  m_TagString: Untagged
+  m_TagString: Player Inventory
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48977,6 +48901,11 @@ PrefabInstance:
     - target: {fileID: 2490187422263589670, guid: dcc5bf8fe4c2f954e8cab2d7d4510f53,
         type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2490187422263589670, guid: dcc5bf8fe4c2f954e8cab2d7d4510f53,
+        type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []

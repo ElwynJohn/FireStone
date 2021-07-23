@@ -18,7 +18,7 @@ namespace Firestone.Inventory
         protected static bool AnyClosedThisUpdate { get; set; } = false;
         protected static bool AnyOpenedThisUpdate { get; set; } = false;
         protected bool Toggled { get; set; } = false;
-        protected InventoryData InventoryData { get; set; } = null;
+        public InventoryData InventoryData { get; protected set; } = null;
         protected HoverableColliders ItemFrameColliders { get; set; } = null;
         protected int IndexOfLastInventorySlotHovered { get; set; } = 0;
         protected static MouseInventorySlot MouseInventory { get; set; } = default;
@@ -27,18 +27,32 @@ namespace Firestone.Inventory
         {
             InventorySlotData[] testData = new InventorySlotData[]
             {
-                new InventorySlotData(new ItemID(0), 1),
-                new InventorySlotData(new ItemID(1), 4),
-                new InventorySlotData(new ItemID(2), 5)
+                new InventorySlotData(ItemID.Wood, 100),
+                new InventorySlotData(ItemID.Wood, 10),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Wood, 1),
+                new InventorySlotData(ItemID.Chest, 4),
+                new InventorySlotData(ItemID.Stone, 5)
             };
             InventoryData = new InventoryData(testData, capacity);
-            for (int i = 0; i < InventoryData.inventoryData.Length && i < itemIconGrid.gridElements.Length; i++)
+			InventoryData.InventoryUpdate += UpdateInventorySlot;
+            for (int i = 0; i < InventoryData.Length && i < itemIconGrid.gridElements.Length; i++)
             {
-                if (InventoryData.inventoryData[i].amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
-                    GameObjectData goData = Resources.Load<GameObjectData>(InventoryData.inventoryData[i].itemID.itemID.ToString());
+                    GameObjectData goData = Resources.Load<GameObjectData>(InventoryData.GetSlotAtIndex(i).ItemID.ToString());
                     itemIconGrid.ChangeGridElementSprite(i, goData.icon);
-                    itemAmountGrid.ChangeTextToDisplay(i, InventoryData.inventoryData[i].amount.ToString());
+                    itemAmountGrid.ChangeTextToDisplay(i, InventoryData.GetSlotAtIndex(i).Amount.ToString());
                 }
             }
             itemFrameGrid.DisplayRangeOfGridElements(false, 0, itemFrameGrid.gridElements.Length);
@@ -69,7 +83,7 @@ namespace Firestone.Inventory
                 bool isInventorySlotClicked = isInventorySlotHovered && (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1));
                 if (isInventorySlotClicked)
                 {
-                    UpdateInventorySlot(indexOfInventorySlotHovered);
+            		InventoryData.InteractWithInventoryWithMouse(indexOfInventorySlotHovered);
                 }
 
                 //give player visual feedback by changing inventory slot colours when hovered
@@ -89,23 +103,30 @@ namespace Firestone.Inventory
             }
         }
 
-
-
-        protected void UpdateInventorySlot(int inventorySlotIndex)
+        public virtual void UpdateInventorySlot(object sender, InventoryUpdateEventArgs args)
         {
-            InventorySlotData updatedInventorySlotData = InventoryData.InteractWithInventoryWithMouse(inventorySlotIndex);
-            if (updatedInventorySlotData.amount == 0)
+            if (args.InventorySlotData.Amount == 0)
             {
-                itemAmountGrid.DisplayRangeOfGridElements(false, inventorySlotIndex, inventorySlotIndex + 1);
-                itemIconGrid.DisplayRangeOfGridElements(false, inventorySlotIndex, inventorySlotIndex + 1);
+                itemAmountGrid.DisplayRangeOfGridElements
+					(false, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+                itemIconGrid.DisplayRangeOfGridElements
+					(false, args.InventorySlotIndex, args.InventorySlotIndex + 1);
             }
             else
             {
-                GameObjectData gameObjectData = Resources.Load<GameObjectData>(updatedInventorySlotData.itemID.itemID.ToString());
-                itemIconGrid.DisplayRangeOfGridElements(true, inventorySlotIndex, inventorySlotIndex + 1);
-                itemIconGrid.ChangeGridElementSprite(inventorySlotIndex, gameObjectData.icon);
-                itemAmountGrid.DisplayRangeOfGridElements(true, inventorySlotIndex, inventorySlotIndex + 1);
-                itemAmountGrid.ChangeTextToDisplay(inventorySlotIndex, updatedInventorySlotData.amount.ToString());
+                GameObjectData gameObjectData = Resources.Load
+					<GameObjectData>(args.InventorySlotData.ItemID.ToString());
+                itemIconGrid.ChangeGridElementSprite
+					(args.InventorySlotIndex, gameObjectData.icon);
+                itemAmountGrid.ChangeTextToDisplay
+					(args.InventorySlotIndex, args.InventorySlotData.Amount.ToString());
+				if (IsOpen)
+				{
+	                itemIconGrid.DisplayRangeOfGridElements
+						(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+	                itemAmountGrid.DisplayRangeOfGridElements
+						(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+				}
             }
         }
 
@@ -117,7 +138,7 @@ namespace Firestone.Inventory
             itemFrameGrid.DisplayRangeOfGridElements(true, 0, itemFrameGrid.gridElements.Length);
             for (int i = 0; i < itemFrameGrid.gridElements.Length; i++)
             {
-                if (InventoryData.inventoryData[i].amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
                     itemAmountGrid.DisplayRangeOfGridElements(true, i, i + 1);
                     itemIconGrid.DisplayRangeOfGridElements(true, i, i + 1);
@@ -138,8 +159,6 @@ namespace Firestone.Inventory
             IsOpen = false;
             IsAnyOpen = false;
             MouseInventorySlot.Close();
-            for (int i = 0; i < InventoryData.inventoryData.Length; i++)
-                itemAmountGrid.ChangeTextToDisplay(i, InventoryData.inventoryData[i].amount.ToString());
         }
         private void Toggle()
         {

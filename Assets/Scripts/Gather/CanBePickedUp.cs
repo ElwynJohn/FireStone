@@ -7,17 +7,29 @@ namespace Firestone.Gather
     public class CanBePickedUp : MonoBehaviour
     {
         [SerializeField] GameObjectData gameObjectData = default;
-        [SerializeField] aaOldInventoryData invData = default;
-        //cache ref
-        int amount = 1;
 
+        int amount = 1;
+		// handled deals with the fact that player has two colliders.
+		bool handled = false;
+
+		private static InventoryData inventory = null;
         //functions
-        private void OnTriggerEnter2D(Collider2D otherCollider)
+        private void OnTriggerStay2D(Collider2D otherCollider)
         {
             if (otherCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                invData.PickUpItem(amount, gameObjectData.gameID);
-                Destroy(gameObject);
+				if (inventory == null)
+					inventory = GameObject.FindWithTag("Player Inventory")
+						.GetComponent<PlayerInventory>()?.InventoryData;
+				if (inventory == null || handled)
+					return;
+                bool success = inventory.Add
+					(new InventorySlotData(gameObjectData.gameID, amount));
+				if (success)
+				{
+					handled = true;
+                	Destroy(gameObject);
+				}
             }
         }
 

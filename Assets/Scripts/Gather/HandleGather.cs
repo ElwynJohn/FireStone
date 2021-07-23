@@ -15,9 +15,8 @@ namespace Firestone.Gather
         [SerializeField] GameObject canvasUIPrefab = default;
 
         [Header("Positioning the drops.")]
-        [Tooltip("Each item will be randomly dropped within this distance of each other")]
-        [SerializeField] float dropPositionVariance = 0.15f;
-        [Tooltip("How far this item will drop")]
+		[SerializeField] Drop drop = default;
+		[SerializeField] Vector3 dropStartPosOffset = default; //local position to drop the object
 
         [Header("isGathering Data")]
         [SerializeField] MouseOverThisCollider mouseOverThisColliderClass = default;
@@ -43,7 +42,7 @@ namespace Firestone.Gather
         Slider sliderInstance;
         RectTransform sliderRect;
         GameObject canvasInstance;
-        Transform pickupsTransform;
+        static Transform pickupsTransform;
 
         //functions
 
@@ -91,26 +90,10 @@ namespace Firestone.Gather
             if (timer >= gameObjectData.TimeToGather)
             {
                 amountToDrop = Random.Range(gameObjectData.AmountDropped - gameObjectData.AmountDroppedDeviation, gameObjectData.AmountDropped + gameObjectData.AmountDroppedDeviation);
-                for (int i = 0; i < amountToDrop; i++)
-                {
-                    //create position for spawning drop
-                    float positionVarianceX = Random.Range(-dropPositionVariance, dropPositionVariance);
-                    float positionVarianceY = Random.Range(-dropPositionVariance, dropPositionVariance);
-                    var positionVariance = new Vector3(positionVarianceX, positionVarianceY, 0);
-                    var dropPositionWithVariance =
-                        gameObject.transform.position + gameObjectData.dropPositionOffset + positionVariance;
+				drop.StartPos = gameObject.transform.position + dropStartPosOffset;
 
-                    //spawn object and set attributes
-                    GameObject objectDropped =
-                        Instantiate(gameObjectData.PickUpPrefab, dropPositionWithVariance, Quaternion.identity, pickupsTransform)
-                        as GameObject;
-                    objectDropped.GetComponent<IconAnimations>().SetVariables
-                        (gameObjectData.SpawnInIdleState,
-                        gameObjectData.DistanceToDrop,
-                        gameObjectData.DistanceToDropDeviation,
-                        gameObjectData.DropDecelleration,
-                        gameObjectData.DropSpeed);
-                }
+				SpawnAndDropObject(gameObjectData, drop, amountToDrop);
+
                 Destroy(gameObject);
                 if (canvasInstance)
                 {
@@ -119,7 +102,31 @@ namespace Firestone.Gather
             }
         }
 
-        private void HandleGatheringAnimations()
+		public static void SpawnAndDropObject
+			(GameObjectData gameObjectData, Drop drop, int amountToDrop)
+		{
+            for (int i = 0; i < amountToDrop; i++)
+            {
+	            //create position for spawning drop
+	            float positionVarianceX = Random.Range(-drop.StartPosDeviation, drop.StartPosDeviation);
+	            float positionVarianceY = Random.Range(-drop.StartPosDeviation, drop.StartPosDeviation);
+	            var positionVariance = new Vector3(positionVarianceX, positionVarianceY, 0);
+	            var dropPositionWithVariance = drop.StartPos + positionVariance;
+	
+	            //spawn object and set attributes
+	            GameObject objectDropped =
+	                Instantiate(gameObjectData.PickUpPrefab, dropPositionWithVariance, Quaternion.identity, pickupsTransform)
+	                as GameObject;
+	            objectDropped.GetComponent<IconAnimations>().SetVariables
+	                (false,
+	                drop.DistanceToDrop,
+	                drop.DistanceToDropDeviation,
+	                drop.Decelleration,
+	                drop.Speed);
+			}
+		}
+
+private void HandleGatheringAnimations()
         {
             if (isGathering && !animatorSet)
             {

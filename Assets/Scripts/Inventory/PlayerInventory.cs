@@ -14,7 +14,7 @@ namespace Firestone.Inventory
             itemFrameGrid.DisplayRangeOfGridElements(true, 0, HotbarLength);
             for (int i = 0; i < HotbarLength; i++)
             {
-                if (InventoryData.inventoryData[i].amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
                     itemIconGrid.DisplayRangeOfGridElements(true, i, i + 1);
                     itemAmountGrid.DisplayRangeOfGridElements(true, i, i + 1);
@@ -43,13 +43,25 @@ namespace Firestone.Inventory
             }
         }
 
+		public override void UpdateInventorySlot(object sender, InventoryUpdateEventArgs args)
+		{
+			base.UpdateInventorySlot(sender, args);
+			if (!IsOpen && args.InventorySlotIndex < HotbarLength)
+			{
+	            itemIconGrid.DisplayRangeOfGridElements
+					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+	            itemAmountGrid.DisplayRangeOfGridElements
+					(true, args.InventorySlotIndex, args.InventorySlotIndex + 1);
+			}
+		}
+
         protected override void Close()
         {
             base.Close();
             itemFrameGrid.DisplayRangeOfGridElements(true, 0, HotbarLength);
             for (int i = 0; i < HotbarLength; i++)
             {
-                if (InventoryData.inventoryData[i].amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
                     itemIconGrid.DisplayRangeOfGridElements(true, i, i + 1);
                     itemAmountGrid.DisplayRangeOfGridElements(true, i, i + 1);

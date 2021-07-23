@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using Firestone.Core;
+using Firestone.Gather;
 
 namespace Firestone.Inventory
 {
@@ -9,11 +10,16 @@ namespace Firestone.Inventory
     public class MouseInventorySlot : MonoBehaviour
     {
         [SerializeField] private Vector2 sizePixels = default;
+		private static Transform playerTransform = default;
+        private static Drop drop = default;
+        private static Vector3 dropStartPosOffset = default;
+
         private static Image itemIcon = default;
         private static Image itemFrame = default;
         private static TextMeshProUGUI textMeshComponent = default;
         public static InventorySlotData itemData { get; private set; } = default;
         private static RectTransform rect = default;
+
         private static InventoryData lastInventoryTouched = default;
         private static int indexOfLastInventorySlotTouched = 0;
         private static bool isOpen = false;
@@ -31,6 +37,14 @@ namespace Firestone.Inventory
             itemFrame.GetComponent<RectTransform>().sizeDelta = sizePixels;
             textMeshComponent.GetComponent<RectTransform>().sizeDelta = sizePixels;
 
+			playerTransform = GameObject.FindWithTag("Player").transform;
+			drop = new Drop {
+				DistanceToDrop = 0.5f,
+        		DistanceToDropDeviation = 0.1f,
+				Decelleration = 4f,
+				Speed = 1f,
+			};
+
             Display(false);
         }
         private void Update()
@@ -43,16 +57,16 @@ namespace Firestone.Inventory
             lastInventoryTouched = previousInventory;
             indexOfLastInventorySlotTouched = previousInventorySlot;
             MouseInventorySlot.itemData = itemData;
-            if (itemData.amount <= 0)
+            if (itemData.Amount <= 0)
             {
                 Display(false);
             }
             else
             {
                 Display(true);
-                GameObjectData goData = Resources.Load<GameObjectData>(itemData.itemID.itemID.ToString());
+                GameObjectData goData = Resources.Load<GameObjectData>(itemData.ItemID.ToString());
                 itemIcon.sprite = goData.icon;
-                textMeshComponent.text = itemData.amount.ToString();
+                textMeshComponent.text = itemData.Amount.ToString();
             }
         }
         public static void Display(bool display)
@@ -72,9 +86,20 @@ namespace Firestone.Inventory
                 return;
 
             Display(false);
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].amount += itemData.amount;
-            lastInventoryTouched.inventoryData[indexOfLastInventorySlotTouched].itemID = itemData.itemID;
-            SetItemData(new InventorySlotData(), lastInventoryTouched, indexOfLastInventorySlotTouched);
+			bool success = lastInventoryTouched.Add
+				(itemData, indexOfLastInventorySlotTouched);
+			// if we cant add item to specific slot, try adding it to any slot
+			if (!success)
+				success = lastInventoryTouched.Add(itemData);
+			if (!success)
+			{
+				drop.StartPos = playerTransform.position + dropStartPosOffset;
+	            GameObjectData goData = Resources.Load<GameObjectData>
+					(itemData.ItemID.ToString());
+				HandleGather.SpawnAndDropObject(goData, drop, itemData.Amount);
+			}
+            SetItemData(new InventorySlotData(), lastInventoryTouched, 
+				indexOfLastInventorySlotTouched);
         }
     }
 }

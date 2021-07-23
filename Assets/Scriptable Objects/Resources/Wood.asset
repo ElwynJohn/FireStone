@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5912630c105cc8a40892265b96f012e3, type: 3}
-  m_Name: 0
+  m_Name: Wood
   m_EditorClassIdentifier: 
-  gameID: 0
+  gameID: 1
   displayedName: Wood
   icon: {fileID: 21300000, guid: 3fcfa35603e5b7b44895675c9300d846, type: 3}
   CanBePlaced: 0
@@ -25,9 +25,3 @@ MonoBehaviour:
   AmountDroppedDeviation: 1
   PickUpPrefab: {fileID: 4680779754271420572, guid: 3c0077a22fcf17e40b99091324bbf5c1,
     type: 3}
-  dropPositionOffset: {x: 0, y: 1, z: 0}
-  SpawnInIdleState: 0
-  DistanceToDrop: 0.5
-  DistanceToDropDeviation: 0.1
-  DropSpeed: 3
-  DropDecelleration: 12
