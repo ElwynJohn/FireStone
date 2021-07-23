@@ -41,7 +41,7 @@ namespace Firestone.Inventory
 		public int Length { get => inventoryData.Length; }
 
 		// returns true if the item was successfully added
-		public bool AddItemToInventory(InventorySlotData item, int inventoryIndex = -1)
+		public bool Add(InventorySlotData item, int inventoryIndex = -1)
 		{
 			if (inventoryIndex == -1)
 				for (int i = inventoryData.Length - 1; i >= 0 ; i--)
@@ -92,7 +92,7 @@ namespace Firestone.Inventory
             {
                 if (invSlot.Amount == 0)
                 {
-					AddItemToInventory(mouseInvSlot, inventorySlotIndex);
+					Add(mouseInvSlot, inventorySlotIndex);
                     MouseInventorySlot.SetItemData
 						(new InventorySlotData(), this, inventorySlotIndex);
                 }
@@ -102,11 +102,11 @@ namespace Firestone.Inventory
 						(invSlot, this, inventorySlotIndex);
 					var itemData = new InventorySlotData
 						(invSlot.ItemID, -1 * invSlot.Amount);
-					AddItemToInventory(itemData, inventorySlotIndex);
+					Add(itemData, inventorySlotIndex);
                 }
                 else if(invSlot.ItemID == mouseInvSlot.ItemID)
                 {
-					AddItemToInventory(mouseInvSlot, inventorySlotIndex);
+					Add(mouseInvSlot, inventorySlotIndex);
                     MouseInventorySlot.SetItemData
 						(new InventorySlotData(), this, inventorySlotIndex);
                 }
@@ -115,8 +115,8 @@ namespace Firestone.Inventory
                     InventorySlotData temp = invSlot;
 					var itemData = new InventorySlotData
 						(invSlot.ItemID, -1 * invSlot.Amount);
-					AddItemToInventory(itemData, inventorySlotIndex);
-					AddItemToInventory(mouseInvSlot, inventorySlotIndex);
+					Add(itemData, inventorySlotIndex);
+					Add(mouseInvSlot, inventorySlotIndex);
                     MouseInventorySlot.SetItemData(temp, this, inventorySlotIndex);
                 }
             }
@@ -126,8 +126,7 @@ namespace Firestone.Inventory
                     (mouseInvSlot.ItemID == invSlot.ItemID 
 					|| invSlot.Amount == 0))
                 {
-					AddItemToInventory(new InventorySlotData
-						(mouseInvSlot.ItemID, 1), inventorySlotIndex);
+					Add(new InventorySlotData(mouseInvSlot.ItemID, 1), inventorySlotIndex);
                     MouseInventorySlot.SetItemData
 						(new InventorySlotData(mouseInvSlot.ItemID, 
                         mouseInvSlot.Amount - 1), this, inventorySlotIndex);
@@ -135,15 +134,10 @@ namespace Firestone.Inventory
                 else if (mouseInvSlot.Amount == 0)
                 {
                     InventorySlotData mouseInventorySlotData = invSlot;
-                    if (invSlot.Amount % 2 == 1)
-                        mouseInventorySlotData.Amount = mouseInventorySlotData.Amount / 2 + 1;
-                    else
-                        mouseInventorySlotData.Amount /= 2;
+                    mouseInventorySlotData.Amount /= 2;
 					var itemData = new InventorySlotData
-						(invSlot.ItemID, invSlot.Amount / 2 * -1);
-					SetSlot(inventorySlotIndex, new InventorySlotData
-						(invSlot.ItemID, 
-						invSlot.Amount / 2));
+						(invSlot.ItemID, -1 * invSlot.Amount / 2);
+					Add(itemData, inventorySlotIndex);
                     MouseInventorySlot.SetItemData(mouseInventorySlotData, this, inventorySlotIndex);
                 }
             }

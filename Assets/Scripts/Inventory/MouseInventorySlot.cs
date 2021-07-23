@@ -86,11 +86,11 @@ namespace Firestone.Inventory
                 return;
 
             Display(false);
-			bool success = lastInventoryTouched.AddItemToInventory
+			bool success = lastInventoryTouched.Add
 				(itemData, indexOfLastInventorySlotTouched);
 			// if we cant add item to specific slot, try adding it to any slot
 			if (!success)
-				success = lastInventoryTouched.AddItemToInventory(itemData);
+				success = lastInventoryTouched.Add(itemData);
 			if (!success)
 			{
 				drop.StartPos = playerTransform.position + dropStartPosOffset;

@@ -23,7 +23,7 @@ namespace Firestone.Gather
 						.GetComponent<PlayerInventory>()?.InventoryData;
 				if (inventory == null || handled)
 					return;
-                bool success = inventory.AddItemToInventory
+                bool success = inventory.Add
 					(new InventorySlotData(gameObjectData.gameID, amount));
 				if (success)
 				{
