@@ -14,7 +14,7 @@ namespace Firestone.Inventory
             itemFrameGrid.DisplayRangeOfGridElements(true, 0, HotbarLength);
             for (int i = 0; i < HotbarLength; i++)
             {
-                if (InventoryData.inventoryData[i].Amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
                     itemIconGrid.DisplayRangeOfGridElements(true, i, i + 1);
                     itemAmountGrid.DisplayRangeOfGridElements(true, i, i + 1);
@@ -61,7 +61,7 @@ namespace Firestone.Inventory
             itemFrameGrid.DisplayRangeOfGridElements(true, 0, HotbarLength);
             for (int i = 0; i < HotbarLength; i++)
             {
-                if (InventoryData.inventoryData[i].Amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
                     itemIconGrid.DisplayRangeOfGridElements(true, i, i + 1);
                     itemAmountGrid.DisplayRangeOfGridElements(true, i, i + 1);

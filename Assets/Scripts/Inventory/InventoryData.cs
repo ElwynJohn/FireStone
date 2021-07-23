@@ -34,9 +34,11 @@ namespace Firestone.Inventory
 			=> InventoryUpdate?.Invoke(this, args);
 		public event EventHandler<InventoryUpdateEventArgs> InventoryUpdate;
 
-        public InventorySlotData[] inventoryData { get; private set; }
 		private int inventorySlotsLeft;
 		public bool IsFull { get => inventorySlotsLeft == 0; }
+        private InventorySlotData[] inventoryData { get; set; }
+		public InventorySlotData GetSlotAtIndex(int index) => inventoryData[index];
+		public int Length { get => inventoryData.Length; }
 
 		//returns true if the item was successfully added
 		public bool AddItemToInventory(InventorySlotData item, int inventoryIndex = -1)

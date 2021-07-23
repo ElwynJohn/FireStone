@@ -46,13 +46,13 @@ namespace Firestone.Inventory
             };
             InventoryData = new InventoryData(testData, capacity);
 			InventoryData.InventoryUpdate += UpdateInventorySlot;
-            for (int i = 0; i < InventoryData.inventoryData.Length && i < itemIconGrid.gridElements.Length; i++)
+            for (int i = 0; i < InventoryData.Length && i < itemIconGrid.gridElements.Length; i++)
             {
-                if (InventoryData.inventoryData[i].Amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
-                    GameObjectData goData = Resources.Load<GameObjectData>(InventoryData.inventoryData[i].ItemID.ToString());
+                    GameObjectData goData = Resources.Load<GameObjectData>(InventoryData.GetSlotAtIndex(i).ItemID.ToString());
                     itemIconGrid.ChangeGridElementSprite(i, goData.icon);
-                    itemAmountGrid.ChangeTextToDisplay(i, InventoryData.inventoryData[i].Amount.ToString());
+                    itemAmountGrid.ChangeTextToDisplay(i, InventoryData.GetSlotAtIndex(i).Amount.ToString());
                 }
             }
             itemFrameGrid.DisplayRangeOfGridElements(false, 0, itemFrameGrid.gridElements.Length);
@@ -138,7 +138,7 @@ namespace Firestone.Inventory
             itemFrameGrid.DisplayRangeOfGridElements(true, 0, itemFrameGrid.gridElements.Length);
             for (int i = 0; i < itemFrameGrid.gridElements.Length; i++)
             {
-                if (InventoryData.inventoryData[i].Amount > 0)
+                if (InventoryData.GetSlotAtIndex(i).Amount > 0)
                 {
                     itemAmountGrid.DisplayRangeOfGridElements(true, i, i + 1);
                     itemIconGrid.DisplayRangeOfGridElements(true, i, i + 1);
